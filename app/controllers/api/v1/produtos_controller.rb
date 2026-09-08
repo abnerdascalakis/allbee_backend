@@ -41,6 +41,6 @@ class Api::V1::ProdutosController < ApplicationController
   end
 
   def produto_params
-    params.expect(produto: %i[nome preco descricao estoque])
+    params.expect(produto: %i[nome preco descricao estoque categoria_id])
   end
 end
