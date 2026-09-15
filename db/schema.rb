@@ -10,9 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_15_143715) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_15_170404) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "carrinhos", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "usuario_id", null: false
+    t.index ["usuario_id"], name: "index_carrinhos_on_usuario_id", unique: true
+  end
 
   create_table "categorias", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -34,6 +41,54 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_143715) do
     t.datetime "updated_at", null: false
     t.bigint "usuario_id", null: false
     t.index ["usuario_id"], name: "index_enderecos_on_usuario_id"
+  end
+
+  create_table "item_carrinhos", force: :cascade do |t|
+    t.bigint "carrinho_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "produto_id", null: false
+    t.integer "quantidade", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.index ["carrinho_id", "produto_id"], name: "index_item_carrinhos_on_carrinho_id_and_produto_id", unique: true
+    t.index ["carrinho_id"], name: "index_item_carrinhos_on_carrinho_id"
+    t.index ["produto_id"], name: "index_item_carrinhos_on_produto_id"
+  end
+
+  create_table "item_pedidos", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "nome_produto", null: false
+    t.bigint "pedido_id", null: false
+    t.integer "preco_unitario_centavos", null: false
+    t.bigint "produto_id"
+    t.integer "quantidade", null: false
+    t.integer "subtotal_centavos", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pedido_id"], name: "index_item_pedidos_on_pedido_id"
+    t.index ["produto_id"], name: "index_item_pedidos_on_produto_id"
+  end
+
+  create_table "pedidos", force: :cascade do |t|
+    t.string "bairro", null: false
+    t.string "cep", null: false
+    t.string "cidade", null: false
+    t.string "complemento"
+    t.datetime "created_at", null: false
+    t.integer "desconto_centavos", default: 0, null: false
+    t.bigint "endereco_id"
+    t.integer "frete_centavos", default: 0, null: false
+    t.string "logradouro", null: false
+    t.string "nome_destinatario", null: false
+    t.string "numero", null: false
+    t.string "status", default: "aguardando_pagamento", null: false
+    t.integer "subtotal_centavos", default: 0, null: false
+    t.string "telefone_destinatario"
+    t.integer "total_centavos", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "usuario_id", null: false
+    t.index ["created_at"], name: "index_pedidos_on_created_at"
+    t.index ["endereco_id"], name: "index_pedidos_on_endereco_id"
+    t.index ["status"], name: "index_pedidos_on_status"
+    t.index ["usuario_id"], name: "index_pedidos_on_usuario_id"
   end
 
   create_table "produtos", force: :cascade do |t|
@@ -59,6 +114,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_15_143715) do
     t.index ["email"], name: "index_usuarios_on_email", unique: true
   end
 
+  add_foreign_key "carrinhos", "usuarios"
   add_foreign_key "enderecos", "usuarios"
+  add_foreign_key "item_carrinhos", "carrinhos"
+  add_foreign_key "item_carrinhos", "produtos"
+  add_foreign_key "item_pedidos", "pedidos"
+  add_foreign_key "item_pedidos", "produtos"
+  add_foreign_key "pedidos", "enderecos"
+  add_foreign_key "pedidos", "usuarios"
   add_foreign_key "produtos", "categorias"
 end
