@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_11_163949) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_15_143715) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_11_163949) do
     t.datetime "created_at", null: false
     t.string "nome"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "enderecos", force: :cascade do |t|
+    t.string "bairro"
+    t.string "cep"
+    t.string "cidade"
+    t.string "complemento"
+    t.datetime "created_at", null: false
+    t.string "logradouro"
+    t.string "nome_destinatario"
+    t.string "numero"
+    t.boolean "principal"
+    t.string "telefone_destinatario"
+    t.datetime "updated_at", null: false
+    t.bigint "usuario_id", null: false
+    t.index ["usuario_id"], name: "index_enderecos_on_usuario_id"
   end
 
   create_table "produtos", force: :cascade do |t|
@@ -43,5 +59,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_11_163949) do
     t.index ["email"], name: "index_usuarios_on_email", unique: true
   end
 
+  add_foreign_key "enderecos", "usuarios"
   add_foreign_key "produtos", "categorias"
 end

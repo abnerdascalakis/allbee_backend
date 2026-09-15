@@ -1,5 +1,6 @@
 class Usuario < ApplicationRecord
   has_secure_password
+  has_many :enderecos, dependent: :destroy
 
   ROLES = %w[cliente admin].freeze
 
