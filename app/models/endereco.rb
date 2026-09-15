@@ -1,5 +1,6 @@
 class Endereco < ApplicationRecord
   belongs_to :usuario
+  has_many :pedidos, dependent: :nullify
 
   before_validation :normalizar_cep
   before_validation :normalizar_telefone
