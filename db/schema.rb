@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_08_122319) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_11_163949) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_08_122319) do
     t.index ["categoria_id"], name: "index_produtos_on_categoria_id"
     t.check_constraint "estoque >= 0", name: "produtos_estoque_nao_negativo"
     t.check_constraint "preco >= 0::numeric", name: "produtos_preco_nao_negativo"
+  end
+
+  create_table "usuarios", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "nome", null: false
+    t.string "password_digest", null: false
+    t.string "role", default: "cliente", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_usuarios_on_email", unique: true
   end
 
   add_foreign_key "produtos", "categorias"
